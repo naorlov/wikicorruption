@@ -40,5 +40,5 @@ class PersonFactory(object):
         vehicles = [(year, vehicles_dict[i]["brand"]["id"] for i in len(vehicles_dict))]
         result.vehicles_info.append([(year, i) for i in vehicles])
 
-        return result
 
+        return result
