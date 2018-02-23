@@ -1,2 +1,12 @@
-.idea/*
 CompaniesSearchApi.token
+# CACHE
+__pycache__/*
+*/__pycache__/*
+
+# IDE
+.idea/*
+graph_server/settings.py
+
+
+# BIN
+graph_server/bin/*
