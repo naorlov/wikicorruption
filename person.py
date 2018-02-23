@@ -4,14 +4,23 @@ class Person(object):
     surname = ''
     patr_name = ''
 
-    real_estates = [{ 'year' : 0,
-                     'reg_id' : 0,
-                     'type_id' : 0,
-                     'square' : 0.0}]
+    real_estates = [
+        # {
+        #    'year' : 0,
+        #    'reg_id' : 0,
+        #    'type_id' : 0,
+        #    'square' : 0.0
+        # }
+    ]
+
     work_info = []  # [(year, work_id)]
+
     income_info = []  # [(year, income)]
+
     relative_info = []  # [(year, user_id)]
+
     region_info = []  # [(year, id)]
+
     vehicles_info = []  # [(year, brand_id)]
 
     def __init__(self, id_, name_, surname_, patr_name_):
@@ -19,6 +28,68 @@ class Person(object):
         self.name = name_
         self.surname = surname_
         self.patr_name = patr_name_
+
+    def update_estates(self, person_dict):
+        pass
+
+    def update_work(self, person_dict):
+        pass
+
+    def update_income(self, person_dict):
+        pass
+
+    def update(self, person_dict):
+        year = person_dict["main"]["year"]
+
+        ####################
+        ### REAL ESTATES ###
+        ####################
+
+        estates_dict = person_dict["real_estates"]
+        for i in range(len(estates_dict)):
+            current_estate = estates_dict[i]
+            inner_estate = {
+                "year": year,
+                "reg_id": current_estate["region"]["id"],
+                "type_id": current_estate["type"]["id"],
+                "square": round(current_estate["square"])
+            }
+            # if inner_estate in self.real_estates:
+            #   continue
+            self.real_estates.append(inner_estate)
+
+        ### WORK INFO ###
+
+        work_dict = person_dict["main"]["office"]
+        work_id = work_dict["id"]
+        self.work_info.append((year, work_id))
+
+        ### INCOME INFO ###
+
+        income_dict = person_dict["incomes"][0]
+        income_amount = income_dict["size"]
+        self.income_info.append((year, income_amount))
+
+        ### RELATIVE INFO ###
+        # in progress
+
+        ### REGION INFO ###
+
+        self.region_info.append((year, work_dict["region"]["id"]))
+
+        ### VEHICLE INFO ###
+
+        vehicles_dict = person_dict["vehicles"]
+        for i in range(len(vehicles_dict)):
+            inner_vehicle = (year, vehicles_dict[i]["brand"])
+            self.vehicles_info.append(inner_vehicle)
+        return
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __ne__(self, other):
+        return self.id != other.id
 
 
 class PersonFactory(object):
@@ -32,13 +103,4 @@ class PersonFactory(object):
             person_dict["patronymic_name"]
         )
 
-        year = main_dict["year"]
-        work_id = main_dict["office"]["id"]
-        result.work_info.append((year, work_id))
-
-        vehicles_dict = person_dict["vehicles"]
-        vehicles = [(year, vehicles_dict[i]["brand"]["id"] for i in len(vehicles_dict))]
-        result.vehicles_info.append([(year, i) for i in vehicles])
-
         return result
-
