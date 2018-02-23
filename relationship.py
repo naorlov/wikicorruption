@@ -17,11 +17,15 @@ class WorkRelationShip(RelationShip):
 def find_realation(person_1, person_2):
     pass
 
+# Some evristics
 def check_family(person_1, person_2):
-    for id in person_1.relative_info:
-        if id == person_2.id:
-            return True
-    mlen = min(len(person_1.surname), len(person_2.surname))
-    if tools.common_pref_len(person_1.surname, person_1.surname)  >= mlen - 2:
+    if tools.acceptable_pref(person_1.surname, person_1.surname, 2):
         return True
+    p1_estate = person_1.real_estates
+    has_common_estate = tools.has_intersection(person_1.real_estates,
+                                               person_2.real_estate)
+    has_common_reigon = tools.has_intersection(person_1.region_info,
+                                               person_2.region_info)
+    is_child = tools.acceptable_pref(person_1.name, person_2.patr_name, 1)\
+                or tools.acceptable_pref(person_2.name, person_1.patr_name, 1) 
     return False
