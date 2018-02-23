@@ -56,7 +56,7 @@ def startTornado():
             (r"/", GraphHandler)
         ]
     )
-    tornado_app.listen(8888)
+    tornado_app.listen(settings.port, settings.ip)
     tornado.ioloop.IOLoop.instance().start()
 
 def stopTornado():
