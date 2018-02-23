@@ -1,8 +1,8 @@
 import tornado
 import tornado.web
 import tornado.ioloop
-import graph_server.settings as settings
-from graph_server.graph import ServerGraph
+import settings 
+from graph import ServerGraph
 
 graph = ServerGraph(settings.pickle_path)
 
@@ -42,6 +42,7 @@ class GraphHandler(tornado.web.RequestHandler):
             graph.update_weight(key, weight)
         elif request_type == "get_weight":
             result["response"] = graph.get_weight(key)
+        graph.save()
         self.write(result)
         self.flush()
 
@@ -52,5 +53,5 @@ if __name__ == '__main__':
             (r"/", GraphHandler)
         ]
     )
-    tornado_app.listen(settings.port)
+    tornado_app.listen(settings.port, settings.ip)
     tornado.ioloop.IOLoop.current().start()
