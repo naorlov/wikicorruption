@@ -22,25 +22,27 @@ class GraphHandler(tornado.web.RequestHandler):
         print("got request: type {} v1 {} v2 {} key {} weight {}".format(
             request_type, v1, v2, key, weight
         ))
+        result = {"response": "OK"}
 
         if request_type == "status":
-            self.write({"response": "OK"})
+            pass
         elif request_type == "add_vertex":
             graph.add_vertex(v1)
         elif request_type == "add_edge":
             graph.add_edge(v1, v2, key)
         elif request_type == "has_vertex":
-            self.write({"response": graph.has_vertex(v1)})
+            result["response"] = graph.has_vertex(v1)
         elif request_type == "has_edge":
-            self.write({"respinse": graph.has_edge(v1, v2)})
+            result["response"] = graph.has_edge(key)
         elif request_type == "remove_vertex":
             graph.remove_vertex(v1)
         elif request_type == "remove_edge":
-            graph.remove_edge(v1, v2)
+            graph.remove_edge(key)
         elif request_type == "update_weight":
-            graph.update_weight(v1, v2, weight)
+            graph.update_weight(key, weight)
         elif request_type == "get_weight":
-            self.write({"response": graph.get_weight(v1, v2)})
+            result["response"] = graph.get_weight(key)
+        self.write(result)
         self.flush()
 
 

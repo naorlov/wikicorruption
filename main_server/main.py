@@ -1,17 +1,19 @@
 import networkx
-import settings
+import main_server.settings as settings
 from pymongo import MongoClient
-import utils
+import main_server.utils as utils
 import pprint
 import itertools
-import relationship
-from graph_client import GraphClient
+import main_server.relationship as relationship
+from main_server.graph_client import GraphClient
 
 
 if __name__ == "__main__":
     client = GraphClient(settings.graph_server_credits)
-    status = client.status()
-    print(status)
+    client.add_vertex(1)
+    client.add_vertex(2)
+    client.add_edge(1, 2, 10)
+
 
 
 # connection = utils.build_connection(settings.server_url, settings.db_name)
