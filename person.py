@@ -1,5 +1,13 @@
 import tools
 
+
+def extract_id(obj):
+    if obj:
+        return obj['id']
+    else:
+        return -1
+
+
 class Person(object):
     id = int()
     name = ''
@@ -46,17 +54,15 @@ class Person(object):
     def update(self, person_dict):
         year = person_dict["main"]["year"]
 
-        ####################
         ### REAL ESTATES ###
-        ####################
 
         estates_dict = person_dict["real_estates"]
         for i in range(len(estates_dict)):
             current_estate = estates_dict[i]
             inner_estate = {
                 "year": year,
-                "reg_id": tools.extract_id(current_estate["region"]),
-                "type_id": tools.extract_id(current_estate["type"]),
+                "reg_id": extract_id(current_estate["region"]),
+                "type_id": extract_id(current_estate["type"]),
                 "square": round(current_estate["square"] if current_estate["square"] else -1)
             }
             # if inner_estate in self.real_estates:
@@ -101,11 +107,14 @@ class Person(object):
 
     def __ne__(self, other):
         return self.id != other.id
+
     def __str__(self):
         return self.name
 
+
 class PersonFactory(object):
-    def create(person_dict: dict):
+    @classmethod
+    def create(cls, person_dict: dict):
         main_dict = person_dict["main"]
         person_dict = main_dict["person"]
         result = Person(

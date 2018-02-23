@@ -17,9 +17,3 @@ def has_intersection(year_id_arr1: list, year_id_arr2: list):
             has_intersection = True
             break
     return has_intersection
-
-def extract_id(obj):
-    if obj:
-        return obj['id']
-    else:
-        return -1
