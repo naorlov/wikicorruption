@@ -29,7 +29,7 @@ class GraphHandler(tornado.web.RequestHandler):
         elif request_type == "add_vertex":
             graph.add_vertex(v1)
         elif request_type == "add_edge":
-            graph.add_edge(v1, v2, key)
+            graph.add_edge(v1, v2, key, 0)
         elif request_type == "has_vertex":
             result["response"] = graph.has_vertex(v1)
         elif request_type == "has_edge":
@@ -47,11 +47,23 @@ class GraphHandler(tornado.web.RequestHandler):
         self.flush()
 
 
-if __name__ == '__main__':
+def startTornado():
     tornado_app = tornado.web.Application(
         [
             (r"/", GraphHandler)
         ]
     )
-    tornado_app.listen(settings.port, settings.ip)
-    tornado.ioloop.IOLoop.current().start()
+    tornado_app.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
+
+def stopTornado():
+    graph.save()
+    tornado.ioloop.IOLoop.instance().stop()
+
+
+if __name__ == '__main__':
+    import threading
+    threading.Thread(target=startTornado).start()
+    command = input()
+    if command == "exit":
+        stopTornado()

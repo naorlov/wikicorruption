@@ -8,16 +8,14 @@ class ServerGraph:
 
     def __init__(self, path):
         self.path = path
-        try:
-            self.graph = pickle.load(open(path, "rb"))
-        except:
-            print("no pickle file found, creating one")
-            with open(path, "wb") as file:
-                pickle.dump(self.graph, file)
-        self.file = open(path, "wb")
+        self.graph = networkx.read_gpickle(self.path + "_graph")
+        self.edges = pickle.load(open(self.path + "_edges", "rb"))
 
     def save(self):
-        pickle.dump(self.graph, self.path)
+        networkx.write_gpickle(self.graph, self.path + "_graph")
+        with open(self.path + "_edges", "wb") as f:
+            pickle.dump(self.edges, f)
+
 
     def add_vertex(self, v1):
         self.graph.add_node(v1)
