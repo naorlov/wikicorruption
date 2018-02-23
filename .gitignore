@@ -4,6 +4,7 @@ __pycache__/*
 
 # IDE
 .idea/*
+.vscode/*
 graph_server/settings.py
 
 
