@@ -1,18 +1,19 @@
 import networkx
 import settings
 from pymongo import MongoClient
-
+import utils
+import pprint
+import itertools
+import relationship
 
 if __name__ == "__main__":
-    client = MongoClient(settings.server_url)
-    database = client[settings.db_name]
-    page = database.declarations
+    connection = utils.build_connection(settings.server_url, settings.db_name)
+    users = utils.build_users(connection.declarations)
 
-    cursor = page.find()
-    for item in page.find():
-        main_dict = item["main"]["person"]
-        if len(main_dict["family_name"]) <= 3:
-            print(main_dict["family_name"])
+    for i in users:
+        print(i.name)
 
 
-
+    for pair in itertools.combinations(users, 2):
+        for relation in relationship.find_realations(pair[0], pair[1]):
+            print("person_1: {0}; person_2 {1}; relation {2}".format(pair[0].id,  pair[1].id, relation))

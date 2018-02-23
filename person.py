@@ -1,3 +1,5 @@
+import tools
+
 class Person(object):
     id = int()
     name = ''
@@ -38,6 +40,9 @@ class Person(object):
     def update_income(self, person_dict):
         pass
 
+    def update_region(self, person_dict):
+        pass
+
     def update(self, person_dict):
         year = person_dict["main"]["year"]
 
@@ -50,9 +55,9 @@ class Person(object):
             current_estate = estates_dict[i]
             inner_estate = {
                 "year": year,
-                "reg_id": current_estate["region"]["id"],
-                "type_id": current_estate["type"]["id"],
-                "square": round(current_estate["square"])
+                "reg_id": tools.extract_id(current_estate["region"]),
+                "type_id": tools.extract_id(current_estate["type"]),
+                "square": round(current_estate["square"] if current_estate["square"] else -1)
             }
             # if inner_estate in self.real_estates:
             #   continue
@@ -66,16 +71,22 @@ class Person(object):
 
         ### INCOME INFO ###
 
-        income_dict = person_dict["incomes"][0]
-        income_amount = income_dict["size"]
-        self.income_info.append((year, income_amount))
+        if len(person_dict["incomes"]) != 0:
+            income_dict = person_dict["incomes"][0]
+            income_amount = income_dict["size"]
+            self.income_info.append((year, income_amount))
+        else:
+            self.income_info.append((year, 0))
 
         ### RELATIVE INFO ###
         # in progress
 
         ### REGION INFO ###
 
-        self.region_info.append((year, work_dict["region"]["id"]))
+        if not work_dict["region"]:
+            self.region_info.append((year, -1))
+        else:
+            self.region_info.append((year, work_dict["region"]["id"]))
 
         ### VEHICLE INFO ###
 
@@ -90,10 +101,11 @@ class Person(object):
 
     def __ne__(self, other):
         return self.id != other.id
-
+    def __str__(self):
+        return self.name
 
 class PersonFactory(object):
-    def create(self, person_dict: dict):
+    def create(person_dict: dict):
         main_dict = person_dict["main"]
         person_dict = main_dict["person"]
         result = Person(
