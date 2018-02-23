@@ -4,7 +4,7 @@ from pymongo import MongoClient
 import utils
 import pprint
 import itertools
-import relationship
+
 from graph_client import GraphClient
 
 

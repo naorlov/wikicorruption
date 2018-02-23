@@ -2,7 +2,7 @@ import pymongo
 from person import *
 import itertools
 import networkx
-import relationship
+import heuristic
 
 def get_id_from_document(document):
     return document["main"]["person"]["id"]
@@ -33,16 +33,13 @@ def build_users_db(edges: pymongo.collection.Collection,
     for p1, p2 in itertools.combinations(users, 2):
         cur_edge = []
         graph_result.add_edge(p1["id"], p2["id"], key=cur_edge_num)
-        for relation in relationship.find_realations(p1["id"], p2["id"]):
-            cur_edge.append({
-                "type": type(relation),
-                "confidence": relation.confidence
-            })
+        
+        # for relation in heuristic.find_realations(p1["id"], p2["id"]):
+        #     cur_edge.append({
+        #         "type": type(relation),
+        #         "confidence": relation.confidence
+        #     })
         pass
 
 
     return db_result, graph_result
-
-
-
-

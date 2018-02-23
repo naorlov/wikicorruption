@@ -1,13 +1,5 @@
 import tools
 
-
-def extract_id(obj):
-    if obj:
-        return obj['id']
-    else:
-        return -1
-
-
 class Person(object):
     id = int()
     name = ''
@@ -61,9 +53,9 @@ class Person(object):
             current_estate = estates_dict[i]
             inner_estate = {
                 "year": year,
-                "reg_id": extract_id(current_estate["region"]),
-                "type_id": extract_id(current_estate["type"]),
-                "square": round(current_estate["square"] if current_estate["square"] else -1)
+                "reg_id": tools.extract_field(current_estate["region"], 'id'),
+                "type_id": tools.extract_field(current_estate["type"]), 'id),
+                "square": round(current_estate["square"]) if current_estate["square"] else None
             }
             # if inner_estate in self.real_estates:
             #   continue
@@ -89,10 +81,7 @@ class Person(object):
 
         ### REGION INFO ###
 
-        if not work_dict["region"]:
-            self.region_info.append((year, -1))
-        else:
-            self.region_info.append((year, work_dict["region"]["id"]))
+        self.region_info.append((year, tools.extract_field(work_dict["region"], "id"))
 
         ### VEHICLE INFO ###
 

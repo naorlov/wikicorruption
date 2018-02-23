@@ -1,2 +1,9 @@
+# CACHE
 __pycache__/*
+*/__pycache__/*
+
+# IDE
 .idea/*
+
+# BIN
+graph_server/graph_binary_data
