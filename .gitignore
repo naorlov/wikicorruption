@@ -8,4 +8,4 @@ graph_server/settings.py
 
 
 # BIN
-graph_server/graph_binary_data
+graph_server/bin/*
