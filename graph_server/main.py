@@ -23,6 +23,9 @@ class GraphHandler(tornado.web.RequestHandler):
             request_type, v1, v2, key, weight
         ))
         result = {"response": "OK"}
+        if graph.count == settings.treshhold:
+            graph.save()
+            graph.count = 0
 
         if request_type == "status":
             pass
@@ -42,9 +45,9 @@ class GraphHandler(tornado.web.RequestHandler):
             graph.update_weight(key, weight)
         elif request_type == "get_weight":
             result["response"] = graph.get_weight(key)
-        graph.save()
         self.write(result)
         self.flush()
+        graph.count += 1
 
 
 def startTornado():

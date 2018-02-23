@@ -1,18 +1,12 @@
-import networkx
 import main_server.settings as settings
-from pymongo import MongoClient
-import main_server.utils as utils
-import pprint
-import itertools
-import main_server.relationship as relationship
 from main_server.graph_client import GraphClient
 
 
 if __name__ == "__main__":
     client = GraphClient(settings.graph_server_credits)
-    client.add_vertex(1)
-    client.add_vertex(2)
-    client.add_edge(1, 2, 10)
+    for i in range(1000):
+        client.add_vertex(i)
+
 
 
 

@@ -5,7 +5,7 @@ import pickle
 class ServerGraph:
     graph = networkx.Graph()
     edges = dict()
-
+    count = 0
     def __init__(self, path):
         self.path = path
         self.graph = networkx.read_gpickle(self.path + "_graph")

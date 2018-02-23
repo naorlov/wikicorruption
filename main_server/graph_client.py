@@ -14,7 +14,7 @@ class GraphClient:
         return self.make_request("add_vertex", v1)
 
     def add_edge(self, v1, v2, key):
-        return self.make_request("add_edge", v1, v2, key)
+        return self.make_request("add_edge", v1, v2, key=key)
 
     def has_vertex(self, v1):
         return self.make_request("has_vertex", v1)
