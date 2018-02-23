@@ -1,2 +1,3 @@
 port = 8888
-pickle_path = "./graph_binary_data"
+ip = "localhost"
+pickle_path = "./binary_data"
