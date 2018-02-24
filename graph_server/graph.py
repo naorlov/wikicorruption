@@ -48,3 +48,6 @@ class ServerGraph:
     def get_weight(self, key):
         v1, v2 = self.edges[key]
         return self.graph[v1][v2]["weight"]
+
+    def det_adjacent(self, v1):
+        return [self.graph[v1][v2]["key"] for v2 in self.graph[v1]]

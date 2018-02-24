@@ -5,7 +5,6 @@ class Person(object):
     name = ''
     surname = ''
     patr_name = ''
-
     real_estates = [
         # {
         #    'year' : 0,
@@ -14,15 +13,10 @@ class Person(object):
         #    'square' : 0.0
         # }
     ]
-
     work_info = []  # [(year, work_id)]
-
     income_info = []  # [(year, income)]
-
     relative_info = []  # [(year, user_id)]
-
     region_info = []  # [(year, id)]
-
     vehicles_info = []  # [(year, brand_id)]
 
     def __init__(self, id_, name_, surname_, patr_name_):
@@ -98,7 +92,7 @@ class Person(object):
         return self.id != other.id
 
     def __str__(self):
-        return self.name
+        return str(self.__dict__)
 
 
 class PersonFactory(object):
@@ -114,3 +108,5 @@ class PersonFactory(object):
         )
 
         return result
+
+

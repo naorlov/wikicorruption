@@ -1,13 +1,11 @@
 import main_server.settings as settings
-from main_server.graph_client import GraphClient
-
+from main_server.graph_client import GraphClient, BufferedRequestQueue
 
 if __name__ == "__main__":
     client = GraphClient(settings.graph_server_credits)
-    for i in range(1000):
-        client.add_vertex(i)
-
-
+    client.add_vertex(1)
+    client.add_vertex(2)
+    print(client.has_vertex(1))
 
 
 # connection = utils.build_connection(settings.server_url, settings.db_name)
