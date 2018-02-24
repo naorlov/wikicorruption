@@ -24,6 +24,9 @@ class BufferedRequestQueue:
         self.queue = []
         return r.json()
 
+    def __del__(self):
+        self.send()
+
 
 class GraphClient:
     def __init__(self, graph_server_creds):

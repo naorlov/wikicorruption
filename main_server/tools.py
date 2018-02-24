@@ -7,7 +7,7 @@ def common_pref_len(str1: str, str2: str):
     return i
 
 def acceptable_pref(str1: str, str2: str, accept: int):
-    if common_pref_len(str1, str2) >= min(len(str1), len(str2)) - accept:
+    if common_pref_len(str1, str2) >= max(len(str1), len(str2)) - accept:
         return True
     return False
 

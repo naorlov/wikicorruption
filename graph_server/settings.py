@@ -1,4 +1,4 @@
-port = 8888
-ip = "localhost"
+port = 80
+ip = "10.164.0.2"
 pickle_path = "./bin/binary_data"
-treshhold = 100
+treshhold = 10000

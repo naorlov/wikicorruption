@@ -2,14 +2,14 @@ from main_server.person import Person
 import main_server.tools as tools
 
 
-def find_relations(person_1: Person, person_2: Person, deep=False):
+def find_relations(person_1: Person, person_2: Person, deep=False, db=None):
     true_heus = []
-    evrs = [CommonEstateHeu, CommonWorkHeu, SurnameHeu]
+    evrs = [CommonEstateHeu, SurnameHeu, CommonWorkHeu]
     if deep:
-        evrs.extend([CommonRegions, PatrNameHeu])
+        evrs.extend([PatrNameHeu, CommonRegions])
     for heu_t in evrs:
         heu = heu_t()
-        heu.fit(person_1, person_2)
+        heu.fit(person_1, person_2, db)
         if heu.status():
             true_heus.append(heu.to_dict())
     return true_heus
@@ -19,7 +19,7 @@ class Heuristic(object):
     def __init__(self):
         self.dict_repr = {'plus_w': 0, 'minus_w': 0}
 
-    def fit(self, p1: Person, p2: Person):
+    def fit(self, p1: Person, p2: Person, db):
         pass
 
     def status(self):
@@ -34,7 +34,7 @@ class CommonEstateHeu(Heuristic):
         super().__init__()
         self.common_estate = []  # (reg_id, square)
 
-    def fit(self, p1: Person, p2: Person):
+    def fit(self, p1: Person, p2: Person, db=None):
         p1_estate = set([(estate['reg_id'], estate['square'])
                          for estate in p1.real_estates
                          if estate['reg_id'] and estate['square']])
@@ -58,7 +58,7 @@ class CommonRegions(Heuristic):
         super().__init__()
         self.common_regions = []  # (year, id)
 
-    def fit(self, p1: Person, p2: Person):
+    def fit(self, p1: Person, p2: Person, db=None):
         p1_regions = set()
         for year, reg_id in p1.region_info:
             if year and reg_id:
@@ -68,6 +68,7 @@ class CommonRegions(Heuristic):
         for year, reg_id in p2.region_info:
             if year and reg_id:
                 p2_regions.add((year, reg_id))
+
 
         self.common_regions = list(p1_regions & p2_regions)
 
@@ -85,11 +86,10 @@ class CommonWorkHeu(Heuristic):
         super().__init__()
         self.common_office = []  # (year, id)
 
-    def fit(self, p1: Person, p2: Person):
+    def fit(self, p1: Person, p2: Person, db=None):
         p1_work = set(p1.work_info)
         p2_work = set(p1.work_info)
-
-        self.common_office = list(p1_work & p2_work)
+        self.common_office = [item for item in p1_work & p2_work if item[1] != 14]
 
     def status(self):
         return len(self.common_office) != 0
@@ -105,7 +105,7 @@ class SurnameHeu(Heuristic):
         super().__init__()
         self.has_same_surname = False
 
-    def fit(self, p1: Person, p2: Person):
+    def fit(self, p1: Person, p2: Person, db=None):
         self.has_same_surname = tools.acceptable_pref(p1.surname, p2.surname, 2)
 
     def status(self):
@@ -122,9 +122,9 @@ class PatrNameHeu(Heuristic):
         super().__init__()
         self.has_same_patr_name = False
 
-    def fit(self, p1: Person, p2: Person):
-        self.has_same_patr_name = tools.acceptable_pref(p1.name, p2.patr_name, 1) or \
-                                  tools.acceptable_pref(p2.name, p1.patr_name, 1)
+    def fit(self, p1: Person, p2: Person, db=None):
+        self.has_same_patr_name = tools.acceptable_pref(p1.name, p2.patr_name, 3) or \
+                                  tools.acceptable_pref(p2.name, p1.patr_name, 3)
 
     def status(self):
         return self.has_same_patr_name
