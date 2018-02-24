@@ -1,14 +1,19 @@
 import networkx
 import pickle
+import os.path
 
+def dump_exists(path):
+    return os.path.isfile(path + "_graph") and os.path.isfile(path + "_edges")
 
 class ServerGraph:
     def __init__(self, path):
         self.path = path
-        #self.graph = networkx.Graph()
-        #self.edges = dict()
-        self.graph = networkx.read_gpickle(self.path + "_graph")
-        self.edges = pickle.load(open(self.path + "_edges", "rb"))
+        if not dump_exists(self.path):
+            self.graph = networkx.Graph()
+            self.edges = dict()
+        else:
+            self.graph = networkx.read_gpickle(self.path + "_graph")
+            self.edges = pickle.load(open(self.path + "_edges", "rb"))
         self.count = 0
 
     def save(self):
@@ -56,4 +61,4 @@ class ServerGraph:
         return self.graph[v1][v2]
 
     def get_adjacent(self, v1):
-        return self.graph.neighbors(v1)
+        return list(self.graph.neighbors(v1))
