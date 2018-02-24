@@ -2,9 +2,11 @@ CompaniesSearchApi.token
 # CACHE
 __pycache__/*
 */__pycache__/*
+main_server/regname_data/__pycache__/*
 
 # IDE
 .idea/*
+.vscode/*
 graph_server/settings.py
 
 

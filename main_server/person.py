@@ -1,35 +1,26 @@
 from main_server import tools as tools
 
 class Person(object):
-    id = int()
-    name = ''
-    surname = ''
-    patr_name = ''
 
-    real_estates = [
-        # {
-        #    'year' : 0,
-        #    'reg_id' : 0,
-        #    'type_id' : 0,
-        #    'square' : 0.0
-        # }
-    ]
-
-    work_info = []  # [(year, work_id)]
-
-    income_info = []  # [(year, income)]
-
-    relative_info = []  # [(year, user_id)]
-
-    region_info = []  # [(year, id)]
-
-    vehicles_info = []  # [(year, brand_id)]
 
     def __init__(self, id_, name_, surname_, patr_name_):
         self.id = id_
         self.name = name_
         self.surname = surname_
         self.patr_name = patr_name_
+        self.real_estates = [
+            # {
+            #    'year' : 0,
+            #    'reg_id' : 0,
+            #    'type_id' : 0
+            #    'square' : 0.0
+            # }
+        ]
+        self.work_info = []  # [(year, work_id)]
+        self.income_info = []  # [(year, income)]
+        self.relative_info = []  # [(year, user_id)]
+        self.region_info = []  # [(year, id)]
+        self.vehicles_info = []  # [(year, brand_id)]
 
     def update_estates(self, person_dict):
         pass
@@ -98,7 +89,7 @@ class Person(object):
         return self.id != other.id
 
     def __str__(self):
-        return self.name
+        return str(self.__dict__)
 
 
 class PersonFactory(object):
@@ -114,3 +105,5 @@ class PersonFactory(object):
         )
 
         return result
+
+

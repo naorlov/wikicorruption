@@ -3,11 +3,11 @@ import json
 
 
 class BufferedRequestQueue:
-    queue = []
 
     def __init__(self, url, port):
         self.url = url
         self.port = port
+        self.queue = []
 
     def add_request(self, request):
         self.queue.append(request)
@@ -57,6 +57,12 @@ class GraphClient:
 
     def get_weight(self, key):
         return self.make_immideate_request("get_weight", key=key)
+
+    def get_edge(self, v1, v2):
+        return self.queue.add_request(self.make_request("get_edge", v1=v1, v2=v2))
+
+    def get_adjacent(self, v1):
+        return self.make_immideate_request("get_adjacent", v1=v1)
 
     def commit(self):
         self.queue.send()

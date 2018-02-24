@@ -3,13 +3,11 @@ import pickle
 
 
 class ServerGraph:
-    graph = networkx.Graph()
-    edges = dict()
-    count = 0
     def __init__(self, path):
         self.path = path
         self.graph = networkx.read_gpickle(self.path + "_graph")
         self.edges = pickle.load(open(self.path + "_edges", "rb"))
+        self.count = 0
 
     def save(self):
         networkx.write_gpickle(self.graph, self.path + "_graph")
@@ -48,3 +46,9 @@ class ServerGraph:
     def get_weight(self, key):
         v1, v2 = self.edges[key]
         return self.graph[v1][v2]["weight"]
+
+    def get_edge(self, v1, v2):
+        return self.graph[v1][v2]["key"]
+
+    def det_adjacent(self, v1):
+        return [self.graph[v1][v2]["key"] for v2 in self.graph[v1]]
