@@ -40,14 +40,14 @@ class GraphClient:
     def add_vertex(self, v1):
         self.queue.add_request(self.make_request("add_vertex", v1))
 
-    def add_edge(self, v1, v2, key, weight):
+    def add_edge(self, v1, v2, key, weight=0):
         self.queue.add_request(self.make_request("add_edge", v1, v2, key=key, weight=weight))
 
     def has_vertex(self, v1):
-        return self.make_immedeate_request("has_vertex", v1)
+        return self.make_immediate_request("has_vertex", v1)
 
     def has_edge(self, key):
-        return self.make_immedeate_request("has_edge", key=key)
+        return self.make_immediate_request("has_edge", key=key)
 
     def remove_vertex(self, v1):
         self.queue.add_request(self.make_request("remove_vertex", v1))
@@ -59,13 +59,13 @@ class GraphClient:
         self.queue.add_request(self.make_request("update_weight", key=key, weight=new_weight))
 
     def get_weight(self, key):
-        return self.make_immedeate_request("get_weight", key=key)
+        return self.make_immediate_request("get_weight", key=key)
 
     def get_edge(self, v1, v2):
-        return self.make_immideate_request("get_edge", v1=v1, v2=v2)
+        return self.make_immediate_request("get_edge", v1=v1, v2=v2)
 
     def get_adjacent(self, v1):
-        return self.make_immedeate_request("get_adjacent", v1=v1)
+        return self.make_immediate_request("get_adjacent", v1=v1)
 
     def commit(self):
         self.queue.send()

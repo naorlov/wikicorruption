@@ -16,7 +16,7 @@ def extract_parameters(handler: tornado.web.RequestHandler):
     return vertex1, vertex2, key, weight
 
 
-def perform_action(request_type, v1, v2, key, weight):
+def perform_action(request_type, v1, v2, key, weight=0):
     print("perform_action(): type {} v1 {} v2 {} key {} weight{}".format(request_type, v1, v2, key, weight))
     result = {"response": "OK"}
     if request_type == "status":
