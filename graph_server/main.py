@@ -39,6 +39,8 @@ def perform_action(request_type, v1, v2, key, weight):
         graph.update_weight(key, weight)
     elif request_type == "get_weight":
         result["response"] = graph.get_weight(key)
+    elif request_type == "get_adjacent":
+        result["response"] = graph.get_adjacent(v1)
     return result
 
 
