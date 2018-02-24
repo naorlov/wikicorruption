@@ -17,7 +17,7 @@ def find_relations(person_1: Person, person_2: Person, deep=False, db=None):
 
 class Heuristic(object):
     def __init__(self):
-        self.dict_repr = {'plus_w': 0, 'minus_w': 0}
+        self.dict_repr = {'plus_w': 0, 'minus_w': 0, 'type': 'base'}
 
     def fit(self, p1: Person, p2: Person, db):
         pass
@@ -32,6 +32,7 @@ class Heuristic(object):
 class CommonEstateHeu(Heuristic):
     def __init__(self):
         super().__init__()
+        self.dict_repr["type"] = 'common_estate'
         self.common_estate = []  # (reg_id, square)
 
     def fit(self, p1: Person, p2: Person, db=None):
@@ -57,6 +58,7 @@ class CommonRegions(Heuristic):
     def __init__(self):
         super().__init__()
         self.common_regions = []  # (year, id)
+        self.dict_repr["type"] = 'common_reg'
 
     def fit(self, p1: Person, p2: Person, db=None):
         p1_regions = set()
@@ -69,7 +71,6 @@ class CommonRegions(Heuristic):
             if year and reg_id:
                 p2_regions.add((year, reg_id))
 
-
         self.common_regions = list(p1_regions & p2_regions)
 
     def status(self):
@@ -78,12 +79,14 @@ class CommonRegions(Heuristic):
     def to_dict(self):
         self.dict_repr["common_regions"] = self.common_regions
         self.dict_repr["plus_w"] = 10
+
         return self.dict_repr
 
 
 class CommonWorkHeu(Heuristic):
     def __init__(self):
         super().__init__()
+        self.dict_repr["type"] = 'common_office'
         self.common_office = []  # (year, id)
 
     def fit(self, p1: Person, p2: Person, db=None):
@@ -103,6 +106,7 @@ class CommonWorkHeu(Heuristic):
 class SurnameHeu(Heuristic):
     def __init__(self):
         super().__init__()
+        self.dict_repr["type"] = 'common_surname'
         self.has_same_surname = False
 
     def fit(self, p1: Person, p2: Person, db=None):
@@ -120,6 +124,7 @@ class SurnameHeu(Heuristic):
 class PatrNameHeu(Heuristic):
     def __init__(self):
         super().__init__()
+        self.dict_repr["type"] = 'common_patrname'
         self.has_same_patr_name = False
 
     def fit(self, p1: Person, p2: Person, db=None):
