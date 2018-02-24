@@ -26,7 +26,7 @@ class CompaniesSearchApi:
         except Exception as e:
             print('ERROR: CompaniesSearchApi: search: something went wrong')
             print(e)
-            return []
+            return 0, []
 
     """Принимает ОГРН или ИНН или ОГРНИП или ИННФЛ компании (сторка или число), 
     возвращает словарь с подробной информацией"""
@@ -49,7 +49,14 @@ class CompaniesSearchApi:
             print(e)
             return {}
 
-
+def _name(info):
+    if 'fl_aff' in info:
+        return info['fl_aff']
+    if 'fl' in info:
+        return info['fl']
+    if 'name' in info:
+        return info['name']
+    return ''
 
 class CompaniesSearch:
     fast_search_limit = 100
@@ -59,17 +66,45 @@ class CompaniesSearch:
     def __init__(self):
         self.csa = CompaniesSearchApi()
 
+    def post_processing(self, search_result):
+        full_comp_info = search_result
+        affilated = set()
+        short_companies = []
+        for c in full_comp_info:
+            try:
+                for x in c['Руководители'] + c['СвУчредит']['all']:
+                    affilated.add(_name(x))
+            except:
+                pass
+            try:
+                short_companies.insert((c['ИНН'], c['НаимЮЛСокр'], c['КодРегион']))
+            except:
+                pass
+        return [affilated, short_companies]
+
     """Ищет компании по ФИО, возвращает те, где совпадает ФИО главного руководителя"""
     def find_companies_by_person_name_fast(self, person_name):
         count, companies = self.csa.search(person_name)
         if count > self.fast_search_limit:
             print('INFO: CompaniesSearch: find_companies_by_person_name_fast: too many companies: '
                   + str(count) + ', person_name="' + person_name + '"')
-        return [x for x in companies if person_name in x['Руководитель']]
+        affilated = set([x['Руководитель'] for x in companies])
+        if person_name in affilated:
+            affilated.remove(person_name)
+        suggested_companies = [self.csa.company_info(x['id']) for x in companies if person_name in x['Руководитель']]
+        suggested_inns = set()
+        try:
+            for c in suggested_companies:
+                for x in c['Руководители']:
+                    if _name(x) == person_name:
+                        suggested_inns.add(x['inn'])
+        except:
+            pass
+        return [suggested_inns, ] + self.post_processing(suggested_companies)
 
     """Ищет компании по ФИО, выбирает те, для которых pfilter(company_info) == True,
     для каждой запрашивает подробную инфу, в ней ищет совпадения ФИО,
-    возвращает пару ([предпологаемые инн чиновника], [список словарей с инфой о компаниях])"""
+    возвращает тройку ([предпологаемые инн чиновника], [предполагаемые аффелированные], [список с инфой о компаниях])"""
     def find_companies_by_person_name_deep(self, person_name, use_seq_matcher=False, pfilter=lambda x: True):
         count, _companies = self.csa.search(person_name)
         _companies = [x for x in _companies if pfilter(x)]
@@ -88,19 +123,10 @@ class CompaniesSearch:
             else:
                 return x == y
 
-        def name(info):
-            if 'fl_aff' in info:
-                return info['fl_aff']
-            if 'fl' in info:
-                return info['fl']
-            if 'name' in info:
-                return info['name']
-            return ''
-
         for c in companies:
             try:
                 for x in c['Руководители'] + c['СвУчредит']['all']:
-                    if strcmp(person_name, name(x)):
+                    if strcmp(person_name, _name(x)):
                         try:
                             suggested_inns.add(x['inn'])
                             suggested_companies[c['ИНН']] = c
@@ -111,7 +137,7 @@ class CompaniesSearch:
                       + person_name + ', company_id = ' + c['ИНН'])
                 print(e)
 
-        return suggested_inns, [suggested_companies[x] for x in suggested_companies]
+        return [suggested_inns, ] + self.post_processing([suggested_companies[x] for x in suggested_companies])
 
 
 
