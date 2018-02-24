@@ -17,11 +17,11 @@ class BufferedRequestQueue:
 
     def send(self):
         payload = {"data": (self.queue,)}
-        self.queue = []
         r = requests.post(
             self.url + ":" + self.port,
             data=payload
         )
+        self.queue = []
         return r.json()
 
     def __del__(self):
@@ -62,7 +62,7 @@ class GraphClient:
         return self.make_immedeate_request("get_weight", key=key)
 
     def get_edge(self, v1, v2):
-        return self.make_immediate_request("get_edge", v1=v1, v2=v2)
+        return self.make_immideate_request("get_edge", v1=v1, v2=v2)
 
     def get_adjacent(self, v1):
         return self.make_immedeate_request("get_adjacent", v1=v1)
@@ -71,7 +71,11 @@ class GraphClient:
         self.queue.send()
 
 
+    def flush(self):
+        self.queue.send()
+
     def make_immediate_request(self, request_type, v1=0, v2=0, key=0, weight=0):
+
         self.queue.send()
         payload = {"type": request_type,
                    "vertex1": v1,
