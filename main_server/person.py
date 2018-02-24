@@ -9,7 +9,7 @@ class Person(object):
         # {
         #    'year' : 0,
         #    'reg_id' : 0,
-        #    'type_id' : 0,
+        #    'type_id' : 0
         #    'square' : 0.0
         # }
     ]

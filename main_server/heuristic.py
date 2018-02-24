@@ -1,20 +1,21 @@
 from person import Person
 import tools
 
-def find_relations(person_1: Person, person_2: Person):
+def find_relations(person_1: Person, person_2: Person, deep=False):
     true_heus = []
-    for heu_t in [CommonEstateHeu,
-                CommonRigions,
-                CommonWorkHeu,
-                SurnameHeu,
-                PatrNameHeu]:
+    evrs = [CommonEstateHeu, CommonWorkHeu, SurnameHeu]
+    if deep:
+        evrs.extend([CommonRegions, PatrNameHeu])
+    for heu_t in evrs:
         heu = heu_t()
         heu.fit(person_1, person_2)
         if heu.status():
-            true_heus.append(heu)
+            true_heus.append(heu.to_dict())
     return true_heus
 
 class Heuristic(object):
+    dict_repr = { 'plus_w' : 0,
+                  'minus_w' : 0 }
     def fit(self):
         pass
 
@@ -22,7 +23,7 @@ class Heuristic(object):
         return False
 
     def to_dict(self):
-        return None
+        return self.dict_repr
 
 class CommonEstateHeu(Heuristic):
     common_estate = [] # (reg_id, square)
@@ -41,9 +42,11 @@ class CommonEstateHeu(Heuristic):
         return len(self.common_estate) != 0
 
     def to_dict(self):
-        return { "common_estate" : self.common_estate }
+        self.dict_repr["common_estate"] = self.common_estate
+        self.dict_repr["plus_w"] = 20
+        return self.dict_repr
 
-class CommonRigions(Heuristic):
+class CommonRegions(Heuristic):
     common_regions = [] # (year, id)
 
     def fit(self, p1: Person, p2: Person):
@@ -63,7 +66,9 @@ class CommonRigions(Heuristic):
         return len(self.common_regions) != 0
 
     def to_dict(self):
-        return { "commin_regions" : self.common_regions }
+        self.dict_repr["common_regions"] = self.common_regions
+        self.dict_repr["plus_w"] = 10
+        return self.dict_repr
 
 class CommonWorkHeu(Heuristic):
     common_office = []  # (year, id)
@@ -78,7 +83,9 @@ class CommonWorkHeu(Heuristic):
         return len(self.common_office) != 0
 
     def to_dict(self):
-        return { "commin_office" : self.common_office }
+        self.dict_repr["common_office"] = self.common_office
+        self.dict_repr["plus_w"] = 50
+        return self.dict_repr
 
 class SurnameHeu(Heuristic):
     has_same_surname = False
@@ -90,7 +97,9 @@ class SurnameHeu(Heuristic):
         return self.has_same_surname
 
     def to_dict(self):
-        return None
+        self.dict_repr["surname"] = []
+        self.dict_repr["plus_w"] = 50
+        return self.dict_repr
 
 class PatrNameHeu(Heuristic):
     has_same_patr_name = False
@@ -102,4 +111,6 @@ class PatrNameHeu(Heuristic):
         return self.has_same_patr_name
 
     def to_dict(self):
-        return None
+        self.dict_repr["patrname"] = []
+        self.dict_repr["plus_w"] = 10
+        return self.dict_repr
