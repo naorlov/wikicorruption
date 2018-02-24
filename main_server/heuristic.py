@@ -1,3 +1,6 @@
+from person import Person
+import tools
+
 def find_relations(person_1: Person, person_2: Person):
     true_heus = []
     for heu_t in [CommonEstateHeu,
@@ -25,11 +28,11 @@ class CommonEstateHeu(Heuristic):
     common_estate = [] # (reg_id, square)
 
     def fit(self, p1: Person, p2: Person):
-        p1_estate = set([(estate['reg_id'], estate['square'])\
-                for estate in p1.real_estates\
+        p1_estate = set([(estate['reg_id'], estate['square'])
+                for estate in p1.real_estates
                     if estate['reg_id'] and estate['square']])
-        p2_estate = set([(estate['reg_id'], estate['square'])\
-                for estate in p2.real_estates\ 
+        p2_estate = set([(estate['reg_id'], estate['square'])
+                for estate in p2.real_estates
                     if estate['reg_id'] and estate['square']])
 
         self.common_estate = list(p1_estate & p2_estate)
@@ -93,8 +96,8 @@ class PatrNameHeu(Heuristic):
     has_same_patr_name = False
 
     def fit(self, p1: Person, p2: Person):
-        self.has_same_patr_name = tools.acceptable_pref(p1.name, p2.patr_name, 1)\
-                               or tools.acceptable_pref(p2.name, p1.patr_name, 1)
+        self.has_same_patr_name = tools.acceptable_pref(p1.name, p2.patr_name, 1) or\
+                                  tools.acceptable_pref(p2.name, p1.patr_name, 1)
     def status(self):
         return self.has_same_patr_name
 

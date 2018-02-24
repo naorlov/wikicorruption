@@ -22,10 +22,8 @@ def build_users(database: pymongo.collection.Collection):
         users[current_user_id].update(document)
     return users.values()
 
-# in given database builds edges of users, given from build_users() method
-# returns edges and graph
-def build_users_db(edges: pymongo.collection.Collection,
-                   users: list):
+# from internal user representation to MongoDB
+def build_users_db(connection: pymongo.collection.Collection, users: list):
     db_result = {}
     graph_result = networkx.Graph()
     cur_edge_num = 0

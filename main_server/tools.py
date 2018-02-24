@@ -18,7 +18,7 @@ def extract_field(obj: dict, field='id'):
         return None
 
 def name2decl_id(name):
-    regname_data.real[]
+    pass
 
 def name2real_id(name):
     return regprocess.name2real_id[regprocess.get_nearest(name)]

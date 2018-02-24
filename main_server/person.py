@@ -54,7 +54,7 @@ class Person(object):
             inner_estate = {
                 "year": year,
                 "reg_id": tools.extract_field(current_estate["region"], 'id'),
-                "type_id": tools.extract_field(current_estate["type"]), 'id),
+                "type_id": tools.extract_field(current_estate["type"], 'id'),
                 "square": round(current_estate["square"]) if current_estate["square"] else None
             }
             # if inner_estate in self.real_estates:
@@ -81,7 +81,7 @@ class Person(object):
 
         ### REGION INFO ###
 
-        self.region_info.append((year, tools.extract_field(work_dict["region"], "id"))
+        self.region_info.append((year, tools.extract_field(work_dict["region"], "id")))
 
         ### VEHICLE INFO ###
 
