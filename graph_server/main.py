@@ -1,28 +1,26 @@
 import tornado
 import tornado.web
 import tornado.ioloop
-import graph_server.settings as settings
+import settings as settings
 import json
-from graph_server.graph import ServerGraph
+from graph import ServerGraph
 
 graph = ServerGraph(settings.pickle_path)
 
 
 def extract_parameters(handler: tornado.web.RequestHandler):
-    vertex1 = handler.get_query_argument("vertex1", default=None)
-    vertex2 = handler.get_query_argument("vertex2", default=None)
-    key = handler.get_query_argument("key", default=None)
-    weight = handler.get_query_argument("weight", default=None)
+    vertex1 = str(handler.get_query_argument("vertex1", default=None))
+    vertex2 = str(handler.get_query_argument("vertex2", default=None))
+    key = str(handler.get_query_argument("key", default=None))
+    weight = str(handler.get_query_argument("weight", default=None))
     return vertex1, vertex2, key, weight
 
 
 def perform_action(request_type, v1, v2, key, weight):
-    print("got request: type {} v1 {} v2 {} key {} weight {}".format(
-        request_type, v1, v2, key, weight
-    ))
+    print("perform_action(): type {} v1 {} v2 {} key {} weight{}".format(request_type, v1, v2, key, weight))
     result = {"response": "OK"}
     if request_type == "status":
-        pass
+        return result 
     elif request_type == "add_vertex":
         graph.add_vertex(v1)
     elif request_type == "add_edge":
@@ -67,12 +65,13 @@ class GraphHandler(tornado.web.RequestHandler):
                 self.get_body_arguments("data")
             )
         )
-        for item in list(data):
+        data = list(data)
+        for item in data:
             perform_action(request_type=item["type"],
-                           v1=item["vertex1"],
-                           v2=item["vertex2"],
-                           key=item["key"],
-                           weight=item["weight"])
+                           v1=str(item["vertex1"]),
+                           v2=str(item["vertex2"]),
+                           key=str(item["key"]),
+                           weight=str(item["weight"]))  
 
         result = {"response": "OK"}
         self.write(result)
@@ -99,5 +98,12 @@ if __name__ == '__main__':
 
     threading.Thread(target=startTornado).start()
     command = input()
-    if command == "exit":
-        stopTornado()
+    while True:
+        command = input()
+        if command == "exit":
+            stopTornado()
+            break
+        if command == "save":
+            graph.save()
+            continue
+
