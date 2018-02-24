@@ -16,7 +16,7 @@ def extract_parameters(handler: tornado.web.RequestHandler):
     return vertex1, vertex2, key, weight
 
 
-def perform_action(request_type, v1, v2, key, weight):
+def perform_action(request_type, v1, v2, key, weight=0):
     print("perform_action(): type {} v1 {} v2 {} key {} weight{}".format(request_type, v1, v2, key, weight))
     result = {"response": "OK"}
     if request_type == "status":
@@ -24,7 +24,7 @@ def perform_action(request_type, v1, v2, key, weight):
     elif request_type == "add_vertex":
         graph.add_vertex(v1)
     elif request_type == "add_edge":
-        graph.add_edge(v1, v2, key, 0)
+        graph.add_edge(v1, v2, key, weight)
     elif request_type == "has_vertex":
         result["response"] = graph.has_vertex(v1)
     elif request_type == "has_edge":

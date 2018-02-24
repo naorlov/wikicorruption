@@ -21,7 +21,6 @@ class ServerGraph:
         with open(self.path + "_edges", "wb") as f:
             pickle.dump(self.edges, f)
 
-
     def add_vertex(self, v1):
         print(v1)
         self.graph.add_node(v1)
@@ -59,6 +58,7 @@ class ServerGraph:
 
     def get_edge(self, v1, v2):
         return self.graph[v1][v2]
+
 
     def get_adjacent(self, v1):
         return list(self.graph.neighbors(v1))
