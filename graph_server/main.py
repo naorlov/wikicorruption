@@ -24,7 +24,7 @@ def perform_action(request_type, v1, v2, key, weight):
     elif request_type == "add_vertex":
         graph.add_vertex(v1)
     elif request_type == "add_edge":
-        graph.add_edge(v1, v2, key, 0)
+        graph.add_edge(v1, v2, key, weight)
     elif request_type == "has_vertex":
         result["response"] = graph.has_vertex(v1)
     elif request_type == "has_edge":
