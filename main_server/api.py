@@ -4,6 +4,7 @@ from main_server.engine import Engine
 from main_server.graph_client import GraphClient
 import tornado
 import tornado.web
+from main_server.engine import Engine
 
 
 def build_connection(server_adress: str, database: str):
@@ -22,7 +23,9 @@ def extract_parameters(handler: tornado.web.RequestHandler):
 
 
 def perform_action(request_type, v1, v2, key, weight):
-    print("got request", self)
+    print("got request", request_type, v1, v2, key, weight)
+    if request_type == "get_person_id":
+
 
 class ApiHandler(tornado.web.RequestHandler):
     def get(self):
