@@ -14,7 +14,6 @@ class ServerGraph:
         with open(self.path + "_edges", "wb") as f:
             pickle.dump(self.edges, f)
 
-
     def add_vertex(self, v1):
         self.graph.add_node(v1)
 

@@ -3,7 +3,6 @@ import json
 
 
 class BufferedRequestQueue:
-
     def __init__(self, url, port):
         self.url = url
         self.port = port
@@ -13,7 +12,7 @@ class BufferedRequestQueue:
         self.queue.append(request)
         if len(self.queue) == 100:
             self.send()
-        self.queue = []
+            self.queue = []
 
     def send(self):
         payload = {"data": (self.queue,)}
@@ -59,7 +58,7 @@ class GraphClient:
         return self.make_immideate_request("get_weight", key=key)
 
     def get_edge(self, v1, v2):
-        return self.queue.add_request(self.make_request("get_edge", v1=v1, v2=v2))
+        return self.make_immideate_request("get_edge", v1=v1, v2=v2)
 
     def get_adjacent(self, v1):
         return self.make_immideate_request("get_adjacent", v1=v1)
