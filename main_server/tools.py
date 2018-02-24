@@ -1,4 +1,4 @@
-from regname_data import regprocess
+#from regname_data import regprocess
 
 def common_pref_len(str1: str, str2: str):
     i = 0
