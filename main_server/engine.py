@@ -143,17 +143,17 @@ class Engine:
 
 
 
-graph_server_credits = {
-    "url": "http://35.204.32.159",
-    "port": "80"
-}
-gc = GraphClient(graph_server_credits)
-db = pymongo.MongoClient('mongodb://35.229.26.187:2700/declarator').declarator
-
-en = Engine(db, db, gc)
-print(en.get_person_id('Путин', 'Владимир', 'Владимирович'))
-print(en.get_user_summary(582))
-print(en.get_neighbourgs(582))
+#graph_server_credits = {
+#    "url": "http://35.204.32.159",
+#    "port": "80"
+#}
+#gc = GraphClient(graph_server_credits)
+#db = pymongo.MongoClient('mongodb://35.229.26.187:2700/declarator').declarator
+#
+#en = Engine(db, db, gc)
+#print(en.get_person_id('Путин', 'Владимир', 'Владимирович'))
+#print(en.get_user_summary(582))
+#print(en.get_neighbourgs(582))
 # print(en.get_connection(8, 182))
 # print(en.get_connection(281, 8))
 # print(en.get_connection(282, 8))
