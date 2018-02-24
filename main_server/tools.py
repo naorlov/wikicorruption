@@ -1,4 +1,4 @@
-from regname_data import regprocess
+#from regname_data import regprocess
 
 def common_pref_len(str1: str, str2: str):
     i = 0
@@ -17,8 +17,7 @@ def extract_field(obj: dict, field='id'):
     else:
         return None
 
-def name2decl_id(name):
-    regname_data.real[]
+#№def name2decl_id(regname_data):    regname_data.real[]
 
 def name2real_id(name):
     return regprocess.name2real_id[regprocess.get_nearest(name)]

@@ -1,5 +1,5 @@
 server_url = "mongodb://localhost/declarator"
-db_name = "declarator"
+declarator_db_name = "declarator"
 
 graph_server_credits = {
     "url": "http://localhost",

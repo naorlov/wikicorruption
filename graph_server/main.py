@@ -41,6 +41,8 @@ def perform_action(request_type, v1, v2, key, weight):
         result["response"] = graph.get_weight(key)
     elif request_type == "get_adjacent":
         result["response"] = graph.get_adjacent(v1)
+    elif request_type == "get_edge":
+        result["response"] = graph.get_edge(v1, v2)
     return result
 
 

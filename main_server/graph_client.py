@@ -58,6 +58,9 @@ class GraphClient:
     def get_weight(self, key):
         return self.make_immideate_request("get_weight", key=key)
 
+    def get_edge(self, v1, v2):
+        return self.queue.add_request(self.make_request("get_edge", v1=v1, v2=v2))
+
     def get_adjacent(self, v1):
         return self.make_immideate_request("get_adjacent", v1=v1)
 
