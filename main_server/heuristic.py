@@ -1,3 +1,6 @@
+from main_server.person import Person
+import main_server.tools as tools
+
 def find_relations(person_1: Person, person_2: Person):
     true_heus = []
     for heu_t in [CommonEstateHeu,
