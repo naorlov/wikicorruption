@@ -48,10 +48,10 @@ class Engine:
             if item["main"]["year"] == 2017:
                 result["last_year_income"] = item["incomes"]["size"]
             result["max_area"] = max(
-                [estate["square"] for estate in item["real_estates"]] + result["max_area"]
+                [estate["square"] for estate in item["real_estates"]]
             )
-        #result["max_income"] = max([(item["incomes"]["size"], item["main"]["year"] for item in documents)])[::-1]
-        #result["max_income"] = min([(item["incomes"]["size"], item["main"]["year"] for item in documents)])[::-1]
+        #result["max_income"] = max([(item["incomes"]["size"] for item in documents)])      # WRONG
+        #result["min_income"] = min([(item["incomes"]["size"] for item in documents)])
         return result
 
     """
@@ -71,8 +71,11 @@ class Engine:
     """
 
     def get_neighbourgs(self, person_id):
-        connected_persons = self.graph_connection.get_adjacent(person_id)
-        return connected_persons['response']
+        try:
+            connected_persons = self.graph_connection.get_adjacent(person_id)
+            return connected_persons['response']
+        except:
+            return []
 
     """
     gets two person_ids and returns heuristcs or None, if no connection found
@@ -81,9 +84,9 @@ class Engine:
     def get_connection(self, person_id1, person_id2):
         try:
             edge = self.graph_connection.get_edge(person_id1, person_id2)['response']
-            eid = edge['key']
-            weight = edge['weight']
-            return weight, self.edges_data.edges.find({"eid": eid})[0]
+            eid = int(edge['key'])
+            weight = int(edge['weight'])
+            return weight, self.edges_data.test_edges.find({"eid": eid})[0]
         except:
             return None, None
 
@@ -97,17 +100,17 @@ class Engine:
         weight = 0
         try:
             edge = self.graph_connection.get_edge(person_id1, person_id2)['response']
-            eid = edge['key']
-            weight = edge['weight']
+            eid = int(edge['key'])
+            weight = int(edge['weight'])
         except:
-            eid = 1 + self.edges_data.find().count()
+            eid = 1 + self.edges_data.test_edges.find().count()
             self.graph_connection.add_edge(person_id1, person_id2, eid)
-            self.edges_data.edges.insert_one({'eid': eid, 'features': []})
+            self.edges_data.test_edges.insert_one({'eid': eid, 'features': []})
         weight += self.user_comment_weight
         self.graph_connection.update_weight(eid, weight)
-        features = self.edges_data.edges.find({'eid': eid})[0]['features']
+        features = self.edges_data.test_edges.find({'eid': eid})[0]['features']
         features.append({'plus_w': self.user_comment_weight, 'minus_w': 0, 'user_comment': user_coment})
-        self.edges_data.edges.update_one({'eid': eid}, {'$set': {'features': features}})
+        self.edges_data.test_edges.update_one({'eid': eid}, {'$set': {'features': features}})
 
 
 
@@ -118,10 +121,10 @@ class Engine:
     def confirm_connection(self, person_id1, person_id2, heuristic):
         try:
             edge = self.graph_connection.get_edge(person_id1, person_id2)['response']
-            eid = edge['key']
-            weight = edge['weight'] + self.confirmation_weight
+            eid = int(edge['key'])
+            weight = int(edge['weight']) + self.confirmation_weight
             self.graph_connection.update_weight(eid, weight)
-            self.edges_data.edges.update_one({'eid': eid},
+            self.edges_data.test_edges.update_one({'eid': eid},
                                 {'$inc': {'features.' + str(heuristic) + '.plus_w': self.confirmation_weight}})
         except:
             print('WARNING: edge not found')
@@ -130,11 +133,34 @@ class Engine:
     def decline_connection(self, person_id1, person_id2, heuristic):
         try:
             edge = self.graph_connection.get_edge(person_id1, person_id2)['response']
-            eid = edge['key']
-            weight = edge['weight'] - self.confirmation_weight
+            eid = int(edge['key'])
+            weight = int(edge['weight']) - self.confirmation_weight
             self.graph_connection.update_weight(eid, weight)
-            self.edges_data.edges.update_one({'eid': eid},
+            self.edges_data.test_edges.update_one({'eid': eid},
                                 {'$inc': {'features.' + str(heuristic) + '.minus_w': self.confirmation_weight}})
         except:
             print('WARNING: edge not found')
+
+
+
+# graph_server_credits = {
+#     "url": "http://35.204.32.159",
+#     "port": "80"
+# }
+# gc = GraphClient(graph_server_credits)
+# db = pymongo.MongoClient('mongodb://35.229.26.187:2700/declarator').declarator
+#
+# en = Engine(db, db, gc)
+# print(en.get_person_id('Зюганов', 'Геннадий', 'Андреевич'))
+# print(en.get_user_summary(8))
+# print(en.get_neighbourgs(8))
+# print(en.get_connection(8, 182))
+# print(en.get_connection(281, 8))
+# print(en.get_connection(282, 8))
+# #en.add_connection(8, 182, "JUST TEST")
+# #en.add_connection(8, 183, "ANOTHER TEST")
+# #en.add_connection(0, 0, "TEST")
+#
+# #en.confirm_connection(8, 182, 0)
+# en.decline_connection(8, 182, 1)
 
