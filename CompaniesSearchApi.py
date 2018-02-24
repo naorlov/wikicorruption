@@ -77,7 +77,7 @@ class CompaniesSearch:
             except:
                 pass
             try:
-                short_companies.insert((c['ИНН'], c['НаимЮЛСокр'], c['КодРегион']))
+                short_companies.append((c['ИНН'], c['НаимЮЛСокр'], c['КодРегион']))
             except:
                 pass
         return [affilated, short_companies]
@@ -88,7 +88,11 @@ class CompaniesSearch:
         if count > self.fast_search_limit:
             print('INFO: CompaniesSearch: find_companies_by_person_name_fast: too many companies: '
                   + str(count) + ', person_name="' + person_name + '"')
-        affilated = set([x['Руководитель'] for x in companies])
+            return [set(), set(), []]
+        affilated = set()
+        for c in companies:
+            for x in c['Руководитель']:
+                affilated.add(x)
         if person_name in affilated:
             affilated.remove(person_name)
         suggested_companies = [self.csa.company_info(x['id']) for x in companies if person_name in x['Руководитель']]
@@ -96,7 +100,7 @@ class CompaniesSearch:
         try:
             for c in suggested_companies:
                 for x in c['Руководители']:
-                    if _name(x) == person_name:
+                    if _name(x).upper() == person_name.upper():
                         suggested_inns.add(x['inn'])
         except:
             pass
@@ -111,6 +115,7 @@ class CompaniesSearch:
         if count > self.fast_search_limit or len(_companies) > self.deep_search_limit:
             print('INFO: CompaniesSearch: find_companies_by_person_name_deep: too many companies: '
                   + str(count) + ', ' + str(len(_companies)) + ', person_name="' + person_name + '"')
+            return [set(), set(), []]
         companies = [self.csa.company_info(c['id']) for c in _companies]
         suggested_inns = set()
         suggested_companies = dict()
